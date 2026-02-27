@@ -1,0 +1,7 @@
+[package]
+name = "recsy"
+version = "0.1.0"
+edition = "2024"
+description = "recommendation system for DSA class"
+
+[dependencies]
