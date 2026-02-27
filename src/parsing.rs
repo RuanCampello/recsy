@@ -35,7 +35,10 @@ impl<'r> Record<'r> {
         let item_id = parts.next()?.parse().ok()?;
         // for some reason, name has some spaces after the last char (?)
         // so we trim it :D
-        let name = parts.next()?.trim();
+        //
+        // we also do trim_matches to remove outer csv quotes
+        // now we get a clean string
+        let name = parts.next()?.trim_matches('"').trim();
 
         Some(Self {
             timestamp,
