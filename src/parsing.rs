@@ -3,15 +3,15 @@
 /// Represents each element inside the `csv`.
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Record<'r> {
-    /// `DATA_COMPRA`
+    /// `DATA_COMPRA`: data em que a compra foi realizada, no formato aaaammdd;
     pub timestamp: u32,
 
-    /// `COD_CLIENTE`
+    /// `COD_CLIENTE`: código único que identifica o cliente no sistema de informação da loja;
     pub user_id: &'r str,
 
-    /// `COD_PRODUTO`
+    /// `COD_PRODUTO`: código único que identifica o produto no sistema de informação da loja;
     pub item_id: u32,
-    /// `NOME_PRODUTO`
+    /// `NOME_PRODUTO`: nome descritivo do produto adquirido.
     pub name: &'r str,
 }
 
