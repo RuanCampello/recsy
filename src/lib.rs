@@ -2,3 +2,4 @@
 
 mod map;
 mod parsing;
+mod shopping;

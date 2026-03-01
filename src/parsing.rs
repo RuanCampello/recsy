@@ -60,7 +60,6 @@ mod test {
 
         let records = Record::parse(&csv);
 
-        println!("{records:#?}");
         assert_eq!(records.len(), original_len);
     }
 }
