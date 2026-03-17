@@ -86,6 +86,11 @@ impl<'l> ShoppingList<'l> {
     pub fn product_count(&self) -> usize {
         self.products.len()
     }
+
+    #[inline(always)]
+    pub fn purchases(&self) -> &[Vec<usize>] {
+        &self.purchases
+    }
 }
 
 #[cfg(test)]
