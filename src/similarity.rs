@@ -50,8 +50,8 @@ impl Similarity {
     }
 
     fn transpose(a: &[Vec<f64>]) -> Vec<Vec<f64>> {
-        let mut m = a.len();
-        let mut n = a[0].len();
+        let m = a.len();
+        let n = a[0].len();
 
         let mut transposed = vec![vec![0.0; m]; n];
         for i in 0..m {
@@ -67,7 +67,7 @@ impl Similarity {
         let m = a.len();
         let n = a[0].len();
         let p = b[0].len();
-        let mut c = vec![vec![0.0; p]; n];
+        let mut c = vec![vec![0.0; p]; m];
 
         for i in 0..m {
             for j in 0..p {
@@ -114,5 +114,15 @@ mod test {
         let records = Record::parse(&csv);
         let list = ShoppingList::new(&records);
         let sim = Similarity::new(&list);
+
+        let clients = [0, 1];
+        for &client in &clients {
+            let similar = sim.most_similar(client);
+            assert_ne!(
+                similar, client,
+                "most_similar must not return the client itself"
+            );
+            println!("client {client} -> most similar: {similar}");
+        }
     }
 }
