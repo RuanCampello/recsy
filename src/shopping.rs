@@ -83,6 +83,11 @@ impl<'l> ShoppingList<'l> {
     }
 
     #[inline(always)]
+    pub fn client_index(&self, code: &str) -> Option<usize> {
+        self.client_map.get(code).copied()
+    }
+
+    #[inline(always)]
     pub fn product_count(&self) -> usize {
         self.products.len()
     }

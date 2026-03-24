@@ -83,6 +83,11 @@ impl Similarity {
         c
     }
 
+    #[inline(always)]
+    pub fn similarity(&self, from: usize, to: usize) -> f64 {
+        self.similarity[from][to]
+    }
+
     pub fn most_similar(&self, client: usize) -> usize {
         let mut min = f64::MAX;
         let mut most_similary = client;
