@@ -2,10 +2,7 @@
 //!
 //! Implements the ranking described in the project definition.
 
-use crate::{
-    shopping::ShoppingList,
-    similarity::{self, Similarity},
-};
+use crate::{shopping::ShoppingList, similarity::Similarity};
 
 pub struct Recommendation<'l> {
     matrix: Similarity,
@@ -27,11 +24,11 @@ impl<'l> Recommendation<'l> {
         let clients = self.list.client_count();
         let products = self.list.product_count();
 
+        // we convert the sparse matrix of purchases
+        // into a dense vector of bools to do lookups
         let mut bought = vec![false; products];
         for &product in self.list.purchases()[client].iter() {
-            if product < products {
-                bought[product] = true;
-            }
+            bought[product] = true;
         }
 
         let mut rank = vec![1.0; products];
@@ -43,17 +40,19 @@ impl<'l> Recommendation<'l> {
             }
 
             let similarity = self.matrix.similarity(client, s);
+            // we ignore less then 1 similarities cause it means that
+            // our intersection with them is empty
             if similarity >= 1.0 {
                 continue;
             }
 
             for &product in &self.list.purchases()[s] {
-                if !bought[product] {
-                    rank[product] += similarity;
-                }
+                rank[product] *= similarity;
             }
         }
 
+        // now we know which products has the client bought,
+        // we can exclude them from being potential candidates to be purchased :D
         let mut candidates = Vec::new();
         for product in 0..products {
             if !bought[product] {
@@ -70,12 +69,12 @@ impl<'l> Recommendation<'l> {
                 .unwrap_or(std::cmp::Ordering::Equal)
         });
 
-        candidates.truncate(k.min(candidates.len()));
+        candidates.truncate(k);
         candidates
     }
 
     #[inline(always)]
-    fn recommend_for_client_code(&self, code: &str, k: usize) -> Vec<RankedProduct> {
+    pub fn recommend_for_client_code(&self, code: &str, k: usize) -> Vec<RankedProduct> {
         let client = self.list.client_index(code).expect("client to exists");
         self.recommend_for_client(client, k)
     }
@@ -104,10 +103,11 @@ mod test {
 
             println!("Recommendations for client {code}:");
             for item in ranked {
-                let name = list.product_name(item.product_id).unwrap_or("<unknown>");
-                println!("  - {} (score={})", name, item.rank);
+                let name = list
+                    .product_name(item.product_id)
+                    .expect("product name to exists");
+                println!("  - {} (score={:4e})", name, item.rank);
             }
         }
     }
 }
-

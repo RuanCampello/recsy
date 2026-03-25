@@ -39,9 +39,8 @@ impl Similarity {
             let pi = intersection[i][i]; // [i][i] is the total of products i
 
             for j in 0..n {
-                match pi > 0.0 {
-                    true => similarity[i][j] = 1.0 - (intersection[i][j] / pi),
-                    false => similarity[i][j] = 1.0,
+                if pi > 0.0 {
+                    similarity[i][j] = 1.0 - (intersection[i][j] / pi);
                 }
             }
         }
